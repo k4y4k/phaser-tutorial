@@ -34,10 +34,17 @@ var platforms;
 function create() {
   this.add.image(400, 300, "sky");
 
+  // There exist two types of physics bodies in 'arcade' physics: ones that can
+  // move and ones that can't. Guess which of those members of a staticGroup
+  // happen to be.
   platforms = this.physics.add.staticGroup();
 
+  // use image called "ground", put its origin at 400×568, scale it ×2 and
+  // finalise it
   platforms.create(400, 568, "ground").setScale(2).refreshBody();
 
+  // create other platforms. They're not the ground, so they don't need to be
+  // scaled :o)
   platforms.create(600, 400, "ground");
   platforms.create(50, 250, "ground");
   platforms.create(750, 220, "ground");
