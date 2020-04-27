@@ -82,6 +82,32 @@ function create() {
     frameRate: 10,
     repeat: -1,
   });
+
+  // add collision between the player and the platforms: without it, the player
+  // just falls through the 'ground', to the bottom of the screen
+  this.physics.add.collider(player, platforms);
+
+  // use arrow keys for movement:
+  cursors = this.input.keyboard.createCursorKeys();
 }
 
-function update() {}
+function update() {
+  // check to see if any of the arrow keys are held down, and then DO THINGS if
+  // they are
+  if (cursors.left.isDown) {
+    player.setVelocityX(-160);
+    player.anims.play("left", true);
+  } else if (cursors.right.isDown) {
+    player.setVelocityX(160);
+    player.anims.play("right", true);
+  } else {
+    player.setVelocityX(0);
+    player.anims.play("turn");
+  }
+
+  // jumping: test if up arrow is held AND if the player is touching the floor
+  // (no mid-air) double jumping 😉
+  if (cursors.up.isDown && player.body.touching.down) {
+    player.setVelocityY(-330);
+  }
+}
