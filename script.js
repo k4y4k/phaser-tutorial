@@ -89,6 +89,43 @@ function create() {
 
   // use arrow keys for movement:
   cursors = this.input.keyboard.createCursorKeys();
+
+  // now let's add something to do: collect stars. Instead of adding them
+  // one-by-one, we can instead have Phaser create a group and iterate over it.
+
+  // notice how it's group() here instead of staticGroup() - we can't have the
+  // stars stuck in place.
+  stars = this.physics.add.group({
+    // set the texture to 'star' (defined above)
+    key: "star",
+    // repeat the star × 11 = 12 stars total
+    repeat: 11,
+    // first star at (12,0), next star at (82, 0), next at (152, 0) and so on
+    setXY: { x: 12, y: 0, stepX: 70 },
+  });
+
+  // now let's go and muck with the individual stars themselves:
+  stars.children.iterate(function (star) {
+    // set the bounce of the individual star somewhere between 0.4 - 0.8
+    // (1 being ⚠️ FULL BOUNCE ⚠️)
+    star.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+  });
+
+  // but we can't have the stars ignore the ground. Let's add collision:
+  this.physics.add.collider(stars, platforms);
+
+  // and allow collection of stars:
+  this.physics.add.overlap(
+    // if objects from the `player` and `stars` collision group collide,
+    player,
+    stars,
+    // invoke collectStar()
+    collectStar,
+    // uh???
+    null,
+    // I assume this has something to do with context 🤷
+    this
+  );
 }
 
 function update() {
@@ -110,4 +147,8 @@ function update() {
   if (cursors.up.isDown && player.body.touching.down) {
     player.setVelocityY(-330);
   }
+}
+
+function collectStar(player, star) {
+  star.disableBody(true, true);
 }
