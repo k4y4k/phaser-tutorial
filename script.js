@@ -31,6 +31,9 @@ function preload() {
 
 var platforms;
 
+var score = 0;
+var scoreText;
+
 function create() {
   this.add.image(400, 300, "sky");
 
@@ -126,6 +129,21 @@ function create() {
     // I assume this has something to do with context 🤷
     this
   );
+
+  // display score!
+  scoreText = this.add.text(
+    // add the text at (16,16)
+    16,
+    16,
+    // with the default text being 'score: 0'
+    "score: 0",
+    {
+      // Phaser uses Courier by default for text, and, like, whatever, I don't
+      // feel like getting a Roboto link off Google Fonts lmao
+      fontSize: "32px",
+      fill: "#000",
+    }
+  );
 }
 
 function update() {
@@ -150,5 +168,10 @@ function update() {
 }
 
 function collectStar(player, star) {
+  // make star invisible and have no physics
   star.disableBody(true, true);
+
+  // add 10 points for each star collected
+  score += 10;
+  scoreText.setText(`Score: ${score}`);
 }
